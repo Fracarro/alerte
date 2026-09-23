@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#0D1D2D">
+<title>Alerte — Fracarro Tunisie</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Alerte">
+<style>
+:root{
+  --page:#CAD1D9;
+  --navy-0:#0A1624;
+  --navy-1:#0E1B2B;
+  --navy-2:#0D1D2D;
+  --navy-3:#16283F;
+  --border:#223A54;
+  --border-soft:#1C3049;
+  --teal:#1FB5B5;
+  --teal-btn:#00828F;
+  --teal-dark:#006A75;
+  --teal-soft:rgba(31,181,181,.16);
+  --ink:#0F1E2E;
+  --ink-2:#4A5A6B;
+  --text-0:#EAF1F7;
+  --text-1:#AFC0D2;
+  --text-2:#7C8FA6;
+  --amber:#B86B01;
+  --blue:#1C62C2;
+  --green:#22C55E;
+  --red:#E5484D;
+  --white:#FFFFFF;
+  --radius:14px;
+  --radius-sm:10px;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;background:var(--navy-0);color:var(--text-0);min-height:100%}
+body{
+  background:var(--page);
+  padding-bottom:96px;
+}
+.wrap{max-width:1000px;margin:0 auto;padding:14px 10px 8px}
+@media (min-width:600px){ .wrap{padding:20px 24px 8px} }
+@media (min-width:1100px){ .wrap{padding:24px 0 8px} }
+/* Tablette / PC : identité sur 3 colonnes, pièces jointes et catégorie côte à côte */
+@media (min-width:760px){
+  .row2{grid-template-columns:1fr 1fr}
+  .duo{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .duo > .card{margin-bottom:14px}
+  .idgrid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:10px}
+  .idgrid .row2{display:contents}
+}
+@media (max-width:380px){ .row2{grid-template-columns:1fr} }
+
+/* ---------- HEADER ---------- */
+.brandcard{
+  background:var(--white);
+  border-radius:var(--radius-sm);
+  padding:10px 14px;
+  display:inline-block;
+  box-shadow:0 6px 18px rgba(0,0,0,.25);
+}
+.brandcard img{display:block;height:34px;width:auto;max-width:100%}
+/* Mot "ALERTE" au style du logo Fracarro (AL = Ali), dessiné en SVG */
+.wordmark{margin:16px 0 6px;line-height:0}
+.wordmark img{height:38px;width:auto;display:block}
+@media (max-width:380px){ .wordmark img{height:32px} }
+.appsub{
+  margin:0 0 20px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--ink-2);font-weight:600;
+}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.langrow{display:flex;gap:6px;flex-shrink:0}
+.langbtn{
+  border:1px solid #B9C3CD;background:#fff;color:var(--ink-2);
+  padding:5px 10px;border-radius:999px;font-size:12px;font-weight:700;cursor:pointer;
+}
+.langbtn.active{background:var(--navy-2);border-color:var(--navy-2);color:#fff}
+
+/* ---------- TABS ---------- */
+.tabs{display:flex;gap:8px;margin-bottom:18px}
+.tab{
+  flex:1;text-align:center;padding:11px 8px;border-radius:var(--radius-sm);
+  background:#FFFFFF;border:1px solid #B9C3CD;color:var(--ink-2);
+  font-weight:700;font-size:14px;cursor:pointer;
+}
+.tab.active{background:var(--navy-2);border-color:var(--navy-2);color:var(--white);box-shadow:inset 0 -3px 0 var(--teal)}
+.panel{display:none}
+.panel.active{display:block}
+
+/* ---------- CARDS / SECTIONS ---------- */
+.card{
+  min-width:0;
+  background:var(--navy-2);border:1px solid #1E3A4C;box-shadow:0 4px 14px rgba(13,29,45,.18);
+  border-radius:var(--radius);padding:16px;margin-bottom:14px;
+}
+.section-title{
+  display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;
+  color:var(--white);margin:0 0 4px;
+}
+.step-badge{
+  width:20px;height:20px;border-radius:50%;background:var(--navy-3);
+  border:1px solid var(--teal);color:var(--teal);font-size:11px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.hint{font-size:12.5px;color:var(--text-2);margin:2px 0 12px;line-height:1.5}
+
+label{display:block;font-size:12px;font-weight:700;color:var(--text-1);margin:0 0 6px;letter-spacing:.02em}
+.req{color:var(--amber)}
+
+select,input[type=text],input[type=email],input[type=tel],textarea{
+  width:100%;background:var(--navy-1);border:1px solid var(--border);
+  color:var(--text-0);border-radius:var(--radius-sm);padding:12px 12px;
+  font-size:15px;outline:none;font-family:inherit;
+}
+select:focus,input:focus,textarea:focus{border-color:var(--teal);box-shadow:0 0 0 3px var(--teal-soft)}
+textarea{min-height:130px;resize:vertical;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13.5px;line-height:1.55}
+textarea::placeholder,input::placeholder{color:var(--text-2);font-family:inherit}
+.field{margin-bottom:14px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.counter{font-size:11px;color:var(--text-2);text-align:end;margin-top:4px}
+
+/* input façon "scan" du système KAIROS, réutilisé pour la description */
+.scanlike{position:relative}
+.scanlike::before{
+  content:'⌗';position:absolute;top:12px;inset-inline-start:12px;color:var(--teal);
+  font-size:13px;opacity:.8;pointer-events:none;
+}
+.scanlike textarea{padding-inline-start:32px}
+
+/* ---------- FILES ---------- */
+.filezone{
+  border:1.5px dashed var(--border);border-radius:var(--radius-sm);
+  padding:16px;text-align:center;color:var(--text-2);font-size:13px;cursor:pointer;
+  background:var(--navy-1);
+}
+.filezone.drag{border-color:var(--teal);color:var(--teal)}
+.filelist{margin-top:10px;display:flex;flex-direction:column;gap:6px}
+.fileitem{
+  display:flex;align-items:center;justify-content:space-between;background:var(--navy-1);
+  border:1px solid var(--border-soft);border-radius:8px;padding:8px 10px;font-size:12.5px;color:var(--text-1);
+}
+.fileitem button{background:none;border:none;color:var(--red);font-size:16px;cursor:pointer;padding:0 4px}
+
+/* ---------- PILLS / BADGES ---------- */
+.pill{
+  display:inline-flex;align-items:center;gap:6px;background:var(--navy-1);
+  border:1px solid var(--border);color:var(--text-1);font-size:11px;font-weight:700;
+  padding:4px 10px;border-radius:999px;letter-spacing:.03em;
+}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--text-2)}
+.dot.green{background:var(--green)}
+.dot.amber{background:var(--amber)}
+.dot.red{background:var(--red)}
+
+/* ---------- BUTTONS ---------- */
+.btn{
+  width:100%;padding:14px 16px;border-radius:var(--radius-sm);border:none;
+  font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;
+  justify-content:center;gap:8px;
+}
+.btn-dark{background:var(--teal-btn);color:var(--white);border:none}
+.btn-dark:active{background:var(--teal-dark)}
+.btn-teal{background:var(--teal-btn);color:#fff}
+.btn-teal:active{background:var(--teal-dark)}
+@media (min-width:760px){ #submitBtn{max-width:340px;margin-inline-start:auto} }
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text-1)}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.spinner{width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ---------- CONSENT ---------- */
+.consent{font-weight:400;display:flex;gap:10px;align-items:flex-start;font-size:12.5px;color:var(--ink);line-height:1.5;margin:6px 0 16px}
+.consent span{font-weight:400}
+.consent input{margin-top:3px;width:18px;height:18px;accent-color:var(--teal);flex-shrink:0}
+
+/* ---------- ALERT / RESULT ---------- */
+.notice{border-radius:var(--radius-sm);padding:12px 14px;font-size:13.5px;margin-bottom:14px;display:none;line-height:1.5}
+.notice.show{display:block}
+.notice.err{background:rgba(229,72,77,.12);border:1px solid rgba(229,72,77,.4);color:#FFC9CB}
+.notice.ok{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.4);color:#BEF3D2}
+.notice.info{background:var(--teal-soft);border:1px solid rgba(23,184,166,.4);color:#BFEFEA}
+
+.codebox{
+  background:var(--navy-1);border:1px solid var(--teal);border-radius:var(--radius-sm);
+  padding:16px;text-align:center;margin:14px 0;
+}
+.codebox .id{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:19px;font-weight:700;color:var(--white);letter-spacing:.03em}
+.codebox .code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:22px;font-weight:800;color:var(--teal);letter-spacing:.08em;margin-top:6px}
+.codebox .warn{font-size:11.5px;color:var(--amber);margin-top:10px}
+
+/* ---------- SUIVI TIMELINE ---------- */
+.timeline{display:flex;justify-content:space-between;margin:20px 4px 6px;position:relative}
+.timeline::before{content:'';position:absolute;top:9px;inset-inline-start:14px;inset-inline-end:14px;height:2px;background:var(--border)}
+.tstep{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;position:relative;z-index:1}
+.tstep .c{width:20px;height:20px;border-radius:50%;background:var(--navy-1);border:2px solid var(--border);}
+.tstep.done .c{background:var(--teal);border-color:var(--teal)}
+.tstep.now .c{background:var(--navy-0);border-color:var(--teal);box-shadow:0 0 0 3px var(--teal-soft)}
+.tstep.rejected .c{background:var(--red);border-color:var(--red)}
+.tstep span{font-size:10px;color:var(--text-2);text-align:center;line-height:1.3}
+.tstep.done span, .tstep.now span{color:var(--text-0);font-weight:700}
+
+/* ---------- INSTALL BANNER ---------- */
+.installbar{
+  position:fixed;left:0;right:0;bottom:0;z-index:20;
+  background:var(--navy-2);border-top:1px solid var(--border);
+  padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+  display:none;align-items:center;gap:12px;
+}
+.installbar.show{display:flex}
+.installbar img{width:34px;height:34px;border-radius:9px;flex-shrink:0}
+.installbar .t{flex:1;font-size:12.5px;color:var(--text-1);line-height:1.4}
+.installbar .t b{color:var(--white);display:block;font-size:13.5px}
+.installbtn{background:var(--teal-btn);color:#fff;border:none;border-radius:9px;padding:9px 14px;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap}
+.installclose{background:none;border:none;color:var(--text-2);font-size:18px;cursor:pointer;padding:0 2px}
+
+.footer{text-align:center;color:var(--ink-2);font-size:11px;margin:18px 0 6px;line-height:1.6}
+
+/* ---------- RTL ---------- */
+html[dir="rtl"] .step-badge, html[dir="rtl"] .scanlike::before{transform:scaleX(-1)}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="topbar">
+    <div class="brandcard"><img src="icons/logo-fracarro.png" alt="Fracarro Tunisie"></div>
+    <div class="langrow">
+      <button class="langbtn active" data-lang="fr" onclick="setLang('fr')">FR</button>
+      <button class="langbtn" data-lang="ar" onclick="setLang('ar')">عربي</button>
+    </div>
+  </div>
+  <h1 class="wordmark"><img src="icons/wordmark-alerte.svg" alt="ALERTE"></h1>
+  <p class="appsub" data-i="appsub">Dispositif d'alerte interne</p>
+
+  <div class="tabs">
+    <div class="tab active" id="tabReport" onclick="showTab('report')" data-i="tabReport">Signaler</div>
+    <div class="tab" id="tabTrack" onclick="showTab('track')" data-i="tabTrack">Suivre une alerte</div>
+  </div>
+
+  <!-- ============= ONGLET SIGNALER ============= -->
+  <div class="panel active" id="panelReport">
+
+    <div class="notice err" id="errReport"></div>
+
+    <div id="formZone">
+      <div class="card">
+        <div class="section-title"><span class="step-badge">1</span><span data-i="s1title">Catégorie</span></div>
+        <p class="hint" data-i="s1hint">Choisissez le sujet le plus proche de votre signalement.</p>
+        <div class="field">
+          <select id="category"><option value="" data-i="selectPh">— Sélectionner —</option></select>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-title"><span class="step-badge">2</span><span data-i="s2title">Description</span></div>
+        <p class="hint" data-i="s2hint">Faits, dates, lieux, personnes impliquées si vous les connaissez. Restez factuel.</p>
+        <div class="field scanlike">
+          <textarea id="description" maxlength="5000" data-i-ph="descPh"></textarea>
+          <div class="counter"><span id="descCount">0</span>/5000</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-title"><span class="step-badge">3</span><span data-i="s3title">Pièces jointes</span></div>
+        <p class="hint" data-i="s3hint">Facultatif — photos ou PDF, 3 fichiers maximum, 5 Mo chacun.</p>
+        <input type="file" id="fileInput" accept="image/*,application/pdf" multiple hidden>
+        <div class="filezone" id="filezone" onclick="document.getElementById('fileInput').click()">
+          <span data-i="fileZoneTxt">Toucher pour ajouter une photo ou un document</span>
+        </div>
+        <div class="filelist" id="filelist"></div>
+      </div>
+
+      <div class="card">
+        <div class="section-title"><span class="step-badge">4</span><span data-i="s4title">Votre identité</span></div>
+        <p class="hint" data-i="s4hint">Obligatoire pour assurer le suivi. Elle reste strictement confidentielle et n'est jamais partagée avec vos collègues.</p>
+        <div class="idgrid">
+        <div class="field">
+          <label data-i="nameLabel">Nom et prénom <span class="req">*</span></label>
+          <input type="text" id="name" maxlength="120" autocomplete="name">
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label data-i="emailLabel">E-mail</label>
+            <input type="email" id="email" maxlength="160" autocomplete="email">
+          </div>
+          <div class="field">
+            <label data-i="phoneLabel">Téléphone</label>
+            <input type="tel" id="phone" maxlength="8" inputmode="numeric" placeholder="8 chiffres">
+          </div>
+        </div>
+        </div>
+        <p class="hint" style="margin-top:-8px" data-i="contactHint">E-mail ou téléphone : au moins l'un des deux.</p>
+      </div>
+
+      <label class="consent">
+        <input type="checkbox" id="consent">
+        <span data-i="consentTxt">Je certifie agir de bonne foi. J'ai compris qu'aucune représaille n'est tolérée envers un lanceur d'alerte de bonne foi.</span>
+      </label>
+
+      <input type="text" id="website" style="position:absolute;left:-9999px" tabindex="-1" autocomplete="off">
+
+      <button class="btn btn-dark" id="submitBtn" onclick="submitAlert()">
+        <span id="submitTxt" data-i="submitBtn">Envoyer l'alerte</span>
+      </button>
+    </div>
+
+    <!-- Résultat après envoi -->
+    <div id="resultZone" style="display:none">
+      <div class="card" style="text-align:center">
+        <div class="section-title" style="justify-content:center" data-i="doneTitle">Alerte enregistrée</div>
+        <p class="hint" data-i="doneHint">Conservez précieusement votre référence et votre code : ils sont les seuls moyens de suivre votre alerte.</p>
+        <div class="codebox">
+          <div class="id" id="resId">—</div>
+          <div class="code" id="resCode">—</div>
+          <div class="warn" data-i="doneWarn">⚠ Ce code ne sera plus jamais affiché</div>
+        </div>
+        <button class="btn btn-ghost" onclick="copyResult()" style="margin-bottom:10px">
+          <span data-i="copyBtn">Copier la référence et le code</span>
+        </button>
+        <button class="btn btn-teal" onclick="resetForm()"><span data-i="newAlertBtn">Signaler une autre alerte</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============= ONGLET SUIVI ============= -->
+  <div class="panel" id="panelTrack">
+    <div class="duo">
+    <div class="card">
+      <div class="section-title" data-i="trackTitle">Suivre mon alerte</div>
+      <p class="hint" data-i="trackHint">Saisissez la référence et le code reçus au moment du dépôt.</p>
+      <div class="field">
+        <label data-i="trackIdLabel">Référence</label>
+        <input type="text" id="trackId" placeholder="ex : SECU-20260916-001" style="text-transform:uppercase">
+      </div>
+      <div class="field">
+        <label data-i="trackCodeLabel">Code de suivi</label>
+        <input type="text" id="trackCode" placeholder="ex : K7PQ2-XM4TA" style="text-transform:uppercase">
+      </div>
+      <div class="notice err" id="errTrack"></div>
+      <button class="btn btn-dark" id="trackBtn" onclick="trackAlert()">
+        <span data-i="trackBtn">Vérifier</span>
+      </button>
+    </div>
+
+    <div class="card" id="trackResult" style="display:none">
+      <div class="section-title" id="trackStatusTitle">—</div>
+      <div class="timeline" id="trackTimeline"></div>
+      <p class="hint" id="trackMeta" style="margin-top:14px"></p>
+    </div>
+    </div>
+  </div>
+
+  <p class="footer" data-i="footer">
+    Fracarro Tunisie · Vos données sont traitées de façon confidentielle,<br>
+    conformément à la loi n°2004-63 et à la loi n°2018-35.
+  </p>
+</div>
+
+<div class="installbar" id="installbar">
+  <img src="icons/icon-192.png" alt="">
+  <div class="t"><b data-i="installTitle">Installer l'application</b><span data-i="installTxt">Accès rapide depuis votre écran d'accueil</span></div>
+  <button class="installbtn" id="installBtn" data-i="installBtn">Installer</button>
+  <button class="installclose" onclick="dismissInstall()">✕</button>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

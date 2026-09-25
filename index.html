@@ -40,9 +40,10 @@
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;padding:0;background:var(--navy-0);color:var(--text-0);min-height:100%}
+html{background:var(--page)}
+html,body{margin:0;padding:0;color:var(--text-0);min-height:100%}
 body{
-  background:var(--page);
+  background:var(--page);min-height:100vh;
   padding-bottom:96px;
 }
 .wrap{max-width:1000px;margin:0 auto;padding:14px 10px 8px}
@@ -62,20 +63,20 @@ body{
 .brandcard{
   background:var(--white);
   border-radius:var(--radius-sm);
-  padding:10px 14px;
+  padding:10px 16px;flex-shrink:0;
   display:inline-block;
   box-shadow:0 6px 18px rgba(0,0,0,.25);
 }
-.brandcard img{display:block;height:34px;width:auto;max-width:100%}
+.brandcard img{display:block;height:42px;width:auto;max-width:100%}
 /* Mot "ALERTE" au style du logo Fracarro (AL = Ali), dessiné en SVG */
 .wordmark{margin:16px 0 6px;line-height:0}
-.wordmark img{height:38px;width:auto;display:block}
-@media (max-width:380px){ .wordmark img{height:32px} }
+.wordmark img{height:42px;width:auto;display:block}
+@media (max-width:420px){ .wordmark img{height:34px} .brandcard img{height:34px} }
 .appsub{
   margin:0 0 20px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;
   color:var(--ink-2);font-weight:600;
 }
-.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .langrow{display:flex;gap:6px;flex-shrink:0}
 .langbtn{
   border:1px solid #B9C3CD;background:#fff;color:var(--ink-2);
@@ -183,9 +184,9 @@ textarea::placeholder,input::placeholder{color:var(--text-2);font-family:inherit
 /* ---------- ALERT / RESULT ---------- */
 .notice{border-radius:var(--radius-sm);padding:12px 14px;font-size:13.5px;margin-bottom:14px;display:none;line-height:1.5}
 .notice.show{display:block}
-.notice.err{background:rgba(229,72,77,.12);border:1px solid rgba(229,72,77,.4);color:#FFC9CB}
-.notice.ok{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.4);color:#BEF3D2}
-.notice.info{background:var(--teal-soft);border:1px solid rgba(23,184,166,.4);color:#BFEFEA}
+.notice.err{background:#FDE2E1;border:1px solid #E5484D;color:#8A1B1F;font-weight:600}
+.notice.ok{background:#DCFCE7;border:1px solid #1E9E55;color:#14532D;font-weight:600}
+.notice.info{background:#DCF3F3;border:1px solid var(--teal-btn);color:#04484C;font-weight:600}
 
 .codebox{
   background:var(--navy-1);border:1px solid var(--teal);border-radius:var(--radius-sm);

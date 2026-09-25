@@ -4,7 +4,7 @@
  * IMPORTANT : remplacer API_URL par l'URL de déploiement de l'étape 1
  * (Déployer > Nouveau déploiement > Application Web > copier l'URL /exec)
  *****************************************************************/
-const API_URL = 'REMPLACER_PAR_URL_APPS_SCRIPT';
+const API_URL = 'https://script.google.com/macros/s/AKfycbykwNpmbtK0iXoQFjSY0XrU7ZB5D-uszYdxI2qVdwJioNedl10CMgMnLsg7EG-CYRrlDg/exec';
 
 /* ------------------------- i18n ------------------------- */
 const I18N = {

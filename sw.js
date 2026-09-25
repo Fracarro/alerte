@@ -3,7 +3,7 @@
    Les appels à l'API (dépôt/suivi d'alerte) ne sont jamais mis en cache :
    ils ont besoin du réseau, sinon ils sont mis en file d'attente côté page. */
 
-const CACHE = 'alerte-fracarro-v3';
+const CACHE = 'alerte-fracarro-v4';
 const APP_SHELL = [
   './',
   './index.html',

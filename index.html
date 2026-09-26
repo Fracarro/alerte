@@ -196,8 +196,9 @@ textarea::placeholder,input::placeholder{color:var(--text-2);font-family:inherit
   background:var(--navy-1);border:1px solid var(--teal);border-radius:var(--radius-sm);
   padding:16px;text-align:center;margin:14px 0;
 }
-.codebox .id{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:19px;font-weight:700;color:var(--white);letter-spacing:.03em}
-.codebox .code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:22px;font-weight:800;color:var(--teal);letter-spacing:.08em;margin-top:6px}
+.codebox .codelabel{font-size:12px;color:var(--text-1);letter-spacing:.06em;text-transform:uppercase;font-weight:700}
+.codebox .id{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;color:var(--text-2);margin-top:12px}
+.codebox .code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:40px;font-weight:800;color:var(--teal);letter-spacing:.16em;margin:10px 0 4px}
 .codebox .warn{font-size:11.5px;color:var(--amber);margin-top:10px}
 
 /* ---------- SUIVI TIMELINE ---------- */
@@ -322,9 +323,10 @@ html[dir="rtl"] .scanlike::before{transform:scaleX(-1)}
         <div class="section-title" style="justify-content:center" data-i="doneTitle">Alerte enregistrée</div>
         <p class="hint" data-i="doneHint">Conservez précieusement votre référence et votre code : ils sont les seuls moyens de suivre votre alerte.</p>
         <div class="codebox">
-          <div class="id" id="resId">—</div>
+          <div class="codelabel" data-i="codeLabel">Votre code de suivi</div>
           <div class="code" id="resCode">—</div>
-          <div class="warn" data-i="doneWarn">⚠ Ce code ne sera plus jamais affiché</div>
+          <div class="warn" data-i="doneWarn">⚠ Notez ce code : il ne sera plus jamais affiché</div>
+          <div class="id" id="resId">—</div>
         </div>
         <button class="btn btn-ghost" onclick="copyResult()" style="margin-bottom:10px">
           <span data-i="copyBtn">Copier la référence et le code</span>
@@ -341,12 +343,9 @@ html[dir="rtl"] .scanlike::before{transform:scaleX(-1)}
       <div class="section-title" data-i="trackTitle">Suivre mon alerte</div>
       <p class="hint" data-i="trackHint">Saisissez la référence et le code reçus au moment du dépôt.</p>
       <div class="field">
-        <label data-i="trackIdLabel">Référence</label>
-        <input type="text" id="trackId" placeholder="ex : SECU-20260916-001" style="text-transform:uppercase">
-      </div>
-      <div class="field">
         <label data-i="trackCodeLabel">Code de suivi</label>
-        <input type="text" id="trackCode" placeholder="ex : K7PQ2-XM4TA" style="text-transform:uppercase">
+        <input type="text" id="trackCode" placeholder="K7P2QM" maxlength="10"
+               style="text-transform:uppercase;font-size:22px;letter-spacing:.25em;text-align:center;font-family:ui-monospace,Menlo,Consolas,monospace">
       </div>
       <div class="notice err" id="errTrack"></div>
       <button class="btn btn-dark" id="trackBtn" onclick="trackAlert()">

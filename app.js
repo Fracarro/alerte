@@ -4,7 +4,7 @@
  * IMPORTANT : remplacer API_URL par l'URL de déploiement de l'étape 1
  * (Déployer > Nouveau déploiement > Application Web > copier l'URL /exec)
  *****************************************************************/
-const API_URL = 'https://script.google.com/macros/s/AKfycbykwNpmbtK0iXoQFjSY0XrU7ZB5D-uszYdxI2qVdwJioNedl10CMgMnLsg7EG-CYRrlDg/exec';
+const API_URL = 'REMPLACER_PAR_URL_APPS_SCRIPT';
 
 /* ------------------------- i18n ------------------------- */
 const I18N = {
@@ -27,13 +27,14 @@ const I18N = {
     consentTxt: "Je certifie agir de bonne foi. J'ai compris qu'aucune représaille n'est tolérée envers un lanceur d'alerte de bonne foi.",
     submitBtn: "Envoyer l'alerte",
     doneTitle: 'Alerte enregistrée',
-    doneHint: 'Conservez précieusement votre référence et votre code : ils sont les seuls moyens de suivre votre alerte.',
-    doneWarn: '⚠ Ce code ne sera plus jamais affiché',
-    copyBtn: 'Copier la référence et le code',
+    doneHint: 'Notez ce code : c’est le seul moyen de suivre votre alerte.',
+    doneWarn: '⚠ Notez ce code : il ne sera plus jamais affiché',
+    copyBtn: 'Copier le code',
     newAlertBtn: 'Signaler une autre alerte',
     trackTitle: 'Suivre mon alerte',
-    trackHint: 'Saisissez la référence et le code reçus au moment du dépôt.',
-    trackIdLabel: 'Référence', trackCodeLabel: 'Code de suivi', trackBtn: 'Vérifier',
+    trackHint: 'Saisissez le code à 6 caractères reçu au moment du dépôt.',
+    trackCodeLabel: 'Code de suivi', trackBtn: 'Vérifier',
+    codeLabel: 'Votre code de suivi', refLabel: 'Référence interne :',
     installTitle: "Installer l'application", installTxt: "Accès rapide depuis votre écran d'accueil",
     installBtn: 'Installer',
     footer: "Fracarro Tunisie · Vos données sont traitées de façon confidentielle,<br>conformément à la loi n°2004-63 et à la loi n°2018-35.",
@@ -52,7 +53,7 @@ const I18N = {
       FILE_TOO_BIG: 'Ce fichier est trop volumineux (10 Mo maximum).',
       RATE_LIMIT: 'Trop de tentatives. Merci de réessayer dans quelques minutes.',
       BUSY: 'Le serveur est occupé, merci de réessayer.',
-      TRACK_INVALID: 'Référence ou code incorrect.',
+      TRACK_INVALID: 'Code incorrect. Vérifiez les 6 caractères.',
       SERVER_ERROR: 'Une erreur est survenue. Merci de réessayer.',
       NETWORK: 'Connexion impossible. Vérifiez votre réseau et réessayez.',
       OFFLINE_QUEUED: "Pas de réseau : votre alerte est gardée sur votre téléphone. Rouvrez l'application une fois connecté : elle sera envoyée et votre référence et votre code s'afficheront."
@@ -77,13 +78,14 @@ const I18N = {
     consentTxt: 'أؤكد أنني أتصرف بحسن نية. فهمت أنه لا يُسمح بأي انتقام تجاه المبلّغ بحسن نية.',
     submitBtn: 'إرسال البلاغ',
     doneTitle: 'تم تسجيل البلاغ',
-    doneHint: 'احتفظ برقم المرجع والرمز جيدًا: هما الوسيلة الوحيدة لمتابعة بلاغك.',
+    doneHint: 'احتفظ بهذا الرمز: إنه الوسيلة الوحيدة لمتابعة بلاغك.',
     doneWarn: '⚠ لن يُعرض هذا الرمز مرة أخرى',
-    copyBtn: 'نسخ المرجع والرمز',
+    copyBtn: 'نسخ الرمز',
     newAlertBtn: 'إبلاغ عن حالة أخرى',
     trackTitle: 'متابعة بلاغي',
-    trackHint: 'أدخل المرجع والرمز اللذين تلقيتهما عند الإرسال.',
-    trackIdLabel: 'المرجع', trackCodeLabel: 'رمز المتابعة', trackBtn: 'تحقق',
+    trackHint: 'أدخل الرمز المكوّن من 6 أحرف الذي تلقيته عند الإرسال.',
+    trackCodeLabel: 'رمز المتابعة', trackBtn: 'تحقق',
+    codeLabel: 'رمز المتابعة الخاص بك', refLabel: 'المرجع الداخلي:',
     installTitle: 'تثبيت التطبيق', installTxt: 'وصول سريع من شاشة هاتفك الرئيسية',
     installBtn: 'تثبيت',
     footer: 'Fracarro Tunisie · تُعامل بياناتك بسرية تامة،<br>وفقًا للقانون عدد 2004-63 والقانون عدد 2018-35.',
@@ -102,7 +104,7 @@ const I18N = {
       FILE_TOO_BIG: 'حجم هذا الملف كبير جدًا (10 ميغا كحد أقصى).',
       RATE_LIMIT: 'محاولات كثيرة جدًا. حاول مرة أخرى بعد قليل.',
       BUSY: 'الخادم مشغول، الرجاء إعادة المحاولة.',
-      TRACK_INVALID: 'المرجع أو الرمز غير صحيح.',
+      TRACK_INVALID: 'الرمز غير صحيح. تحقق من الأحرف الستة.',
       SERVER_ERROR: 'حدث خطأ. الرجاء إعادة المحاولة.',
       NETWORK: 'تعذّر الاتصال. تحقق من الشبكة وأعد المحاولة.',
       OFFLINE_QUEUED: 'لا يوجد اتصال: تم حفظ بلاغك على هاتفك. أعد فتح التطبيق عند توفر الاتصال: سيُرسل البلاغ ويظهر المرجع والرمز.'
@@ -336,14 +338,14 @@ function showResult(id, code) {
   lastResult = { id, code };
   document.getElementById('formZone').style.display = 'none';
   document.getElementById('resultZone').style.display = 'block';
-  document.getElementById('resId').textContent = id;
+  document.getElementById('resId').textContent = I18N[lang].refLabel + ' ' + id;
   document.getElementById('resCode').textContent = code;
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function copyResult() {
   if (!lastResult) return;
-  const text = lastResult.id + ' / ' + lastResult.code;
+  const text = lastResult.code;
   navigator.clipboard && navigator.clipboard.writeText(text);
 }
 
@@ -412,14 +414,13 @@ function callApi(payload) {
 async function trackAlert() {
   const errBox = document.getElementById('errTrack');
   errBox.classList.remove('show');
-  const id = document.getElementById('trackId').value.trim().toUpperCase();
   const code = document.getElementById('trackCode').value.trim().toUpperCase();
-  if (!id || !code) { errBox.textContent = errMsg('TRACK_INVALID'); errBox.classList.add('show'); return; }
+  if (code.length < 5) { errBox.textContent = errMsg('TRACK_INVALID'); errBox.classList.add('show'); return; }
 
   const btn = document.getElementById('trackBtn');
   btn.disabled = true;
   try {
-    const data = await callApi({ action: 'track', id, code });
+    const data = await callApi({ action: 'track', code });
     if (!data.ok) {
       errBox.textContent = errMsg(data.error);
       errBox.classList.add('show');

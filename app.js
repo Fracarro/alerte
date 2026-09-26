@@ -4,7 +4,7 @@
  * IMPORTANT : remplacer API_URL par l'URL de déploiement de l'étape 1
  * (Déployer > Nouveau déploiement > Application Web > copier l'URL /exec)
  *****************************************************************/
-const API_URL = 'https://script.google.com/macros/s/AKfycbykwNpmbtK0iXoQFjSY0XrU7ZB5D-uszYdxI2qVdwJioNedl10CMgMnLsg7EG-CYRrlDg/exec';
+const API_URL = 'REMPLACER_PAR_URL_APPS_SCRIPT';
 
 /* ------------------------- i18n ------------------------- */
 const I18N = {
@@ -17,7 +17,8 @@ const I18N = {
     s2title: 'Description',
     s2hint: 'Faits, dates, lieux, personnes impliquées si vous les connaissez. Restez factuel.',
     descPh: 'Décrivez la situation le plus précisément possible…',
-    s3title: 'Pièces jointes', s3hint: 'Facultatif — photos ou PDF, 3 fichiers maximum, 5 Mo chacun.',
+    s3title: 'Pièces jointes', s3hint: 'Facultatif — photos ou PDF, 3 fichiers maximum. Les photos sont réduites automatiquement.',
+    compressing: 'réduction en cours…',
     fileZoneTxt: 'Toucher pour ajouter une photo ou un document',
     s4title: 'Votre identité',
     s4hint: "Obligatoire pour assurer le suivi. Elle reste strictement confidentielle et n'est jamais partagée avec vos collègues.",
@@ -48,7 +49,7 @@ const I18N = {
       DESCRIPTION_TOO_SHORT: 'Merci de détailler un peu plus la description (20 caractères minimum).',
       TOO_MANY_FILES: 'Trois pièces jointes au maximum.',
       FILE_TYPE: 'Type de fichier non accepté (photo ou PDF uniquement).',
-      FILE_TOO_BIG: 'Ce fichier dépasse 5 Mo.',
+      FILE_TOO_BIG: 'Ce fichier est trop volumineux (10 Mo maximum).',
       RATE_LIMIT: 'Trop de tentatives. Merci de réessayer dans quelques minutes.',
       BUSY: 'Le serveur est occupé, merci de réessayer.',
       TRACK_INVALID: 'Référence ou code incorrect.',
@@ -66,7 +67,8 @@ const I18N = {
     s2title: 'الوصف',
     s2hint: 'الوقائع والتواريخ والأماكن والأشخاص المعنيين إن وُجدوا. كن واقعيًا.',
     descPh: 'صف الحالة بأكبر قدر ممكن من الدقة…',
-    s3title: 'المرفقات', s3hint: 'اختياري — صور أو PDF، 3 ملفات كحد أقصى، 5 ميغا لكل ملف.',
+    s3title: 'المرفقات', s3hint: 'اختياري — صور أو PDF، 3 ملفات كحد أقصى. يتم تصغير الصور تلقائيًا.',
+    compressing: 'جارٍ التصغير…',
     fileZoneTxt: 'اضغط لإضافة صورة أو مستند',
     s4title: 'هويتك',
     s4hint: 'إلزامية لضمان المتابعة. تبقى سرية تمامًا ولا تُشارك أبدًا مع زملائك.',
@@ -97,7 +99,7 @@ const I18N = {
       DESCRIPTION_TOO_SHORT: 'الرجاء تفصيل الوصف أكثر (20 حرفًا كحد أدنى).',
       TOO_MANY_FILES: '3 مرفقات كحد أقصى.',
       FILE_TYPE: 'نوع الملف غير مقبول (صورة أو PDF فقط).',
-      FILE_TOO_BIG: 'هذا الملف يتجاوز 5 ميغا.',
+      FILE_TOO_BIG: 'حجم هذا الملف كبير جدًا (10 ميغا كحد أقصى).',
       RATE_LIMIT: 'محاولات كثيرة جدًا. حاول مرة أخرى بعد قليل.',
       BUSY: 'الخادم مشغول، الرجاء إعادة المحاولة.',
       TRACK_INVALID: 'المرجع أو الرمز غير صحيح.',
@@ -180,12 +182,55 @@ fileInput.addEventListener('change', (e) => addFiles(e.target.files));
   });
 });
 
-function addFiles(list) {
-  Array.from(list).forEach(f => {
-    if (selectedFiles.length >= 3) return;
-    selectedFiles.push(f);
-  });
+async function addFiles(list) {
+  const box = document.getElementById('filelist');
+  for (const f of Array.from(list)) {
+    if (selectedFiles.length >= 3) break;
+    box.insertAdjacentHTML('beforeend', '<div class="fileitem" id="tmpload"><span>' + escapeHtml(f.name) + ' — ' + I18N[lang].compressing + '</span></div>');
+    let fichier = f;
+    try { fichier = await compresserImage(f); } catch (e) { /* on garde l'original */ }
+    const tmp = document.getElementById('tmpload');
+    if (tmp) tmp.remove();
+    selectedFiles.push(fichier);
+    renderFiles();
+  }
+  fileInput.value = '';
   renderFiles();
+}
+
+/**
+ * Réduit une photo : côté le plus long ramené à 1600 px, qualité 75 %.
+ * Une photo de 6 Mo tombe en général sous 500 Ko, restant parfaitement lisible.
+ * Les PDF et les petites images ne sont pas touchés.
+ */
+function compresserImage(file) {
+  return new Promise((resolve, reject) => {
+    if (!file.type || file.type.indexOf('image/') !== 0 || file.size < 600 * 1024) return resolve(file);
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      const MAX = 1600;
+      let { width: w, height: h } = img;
+      if (Math.max(w, h) > MAX) {
+        const r = MAX / Math.max(w, h);
+        w = Math.round(w * r); h = Math.round(h * r);
+      }
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, w, h);
+      ctx.drawImage(img, 0, 0, w, h);
+      c.toBlob(blob => {
+        if (!blob || blob.size >= file.size) return resolve(file);
+        const nom = file.name.replace(/\.[^.]+$/, '') + '.jpg';
+        resolve(new File([blob], nom, { type: 'image/jpeg', lastModified: Date.now() }));
+      }, 'image/jpeg', 0.75);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('image illisible')); };
+    img.src = url;
+  });
 }
 
 function renderFiles() {
@@ -194,8 +239,10 @@ function renderFiles() {
   selectedFiles.forEach((f, i) => {
     const div = document.createElement('div');
     div.className = 'fileitem';
-    const size = (f.size / 1024 / 1024).toFixed(1);
-    div.innerHTML = '<span>' + escapeHtml(f.name) + ' · ' + size + ' Mo</span>';
+    const size = f.size < 1024 * 1024
+      ? Math.round(f.size / 1024) + ' Ko'
+      : (f.size / 1024 / 1024).toFixed(1) + ' Mo';
+    div.innerHTML = '<span>' + escapeHtml(f.name) + ' · ' + size + '</span>';
     const btn = document.createElement('button');
     btn.textContent = '✕';
     btn.onclick = () => { selectedFiles.splice(i, 1); renderFiles(); };

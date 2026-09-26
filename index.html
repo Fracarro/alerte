@@ -43,8 +43,9 @@
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html{background:var(--page)}
-html,body{margin:0;padding:0;color:var(--text-0);min-height:100%}
+.hp{position:absolute;width:1px;height:1px;padding:0;border:0;opacity:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%)}
+html{background:var(--page);overflow-x:hidden}
+html,body{margin:0;padding:0;color:var(--text-0);min-height:100%;max-width:100%;overflow-x:hidden}
 body{
   background:var(--page);min-height:100vh;
   padding-bottom:96px;
@@ -273,7 +274,7 @@ html[dir="rtl"] .scanlike::before{transform:scaleX(-1)}
 
       <div class="card">
         <div class="section-title"><span class="step-badge">3</span><span data-i="s3title">Pièces jointes</span></div>
-        <p class="hint" data-i="s3hint">Facultatif — photos ou PDF, 3 fichiers maximum, 5 Mo chacun.</p>
+        <p class="hint" data-i="s3hint">Facultatif — photos ou PDF, 3 fichiers maximum. Les photos sont réduites automatiquement.</p>
         <input type="file" id="fileInput" accept="image/*,application/pdf" multiple hidden>
         <div class="filezone" id="filezone" onclick="document.getElementById('fileInput').click()">
           <span data-i="fileZoneTxt">Toucher pour ajouter une photo ou un document</span>
@@ -308,7 +309,7 @@ html[dir="rtl"] .scanlike::before{transform:scaleX(-1)}
         <span data-i="consentTxt">Je certifie agir de bonne foi. J'ai compris qu'aucune représaille n'est tolérée envers un lanceur d'alerte de bonne foi.</span>
       </label>
 
-      <input type="text" id="website" style="position:absolute;left:-9999px" tabindex="-1" autocomplete="off">
+      <input type="text" id="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
 
       <button class="btn btn-dark" id="submitBtn" onclick="submitAlert()">
         <span id="submitTxt" data-i="submitBtn">Envoyer l'alerte</span>

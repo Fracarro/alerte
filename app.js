@@ -89,8 +89,8 @@ const I18N = {
     installTitle: 'تثبيت التطبيق', installTxt: 'وصول سريع من شاشة هاتفك الرئيسية',
     installBtn: 'تثبيت',
     footer: 'Fracarro Tunisie · تُعامل بياناتك بسرية تامة،<br>وفقًا للقانون عدد 2004-63 والقانون عدد 2018-35.',
-    steps: ['جديد', 'قيد الدراسة', 'قيد المعالجة', 'مغلق'],
-    stepRejected: 'غير مقبول',
+    steps: ['جديدة', 'قيد الدراسة', 'قيد المعالجة', 'مُعالَجة'],
+    stepRejected: 'غير مقبولة',
     errors: {
       INVALID_CATEGORY: 'الرجاء اختيار تصنيف.',
       CONSENT_REQUIRED: 'الرجاء تأكيد حسن النية.',
@@ -448,24 +448,27 @@ function renderTrack(data) {
 
   if (data.statut === 'REJECTED') {
     title.textContent = t.stepRejected;
-    line.innerHTML = '<div class="tstep rejected done"><div class="c"></div><span>' + t.stepRejected + '</span></div>';
+    line.innerHTML = '<div class="tstep rejected done now"><div class="c"></div><span>' + t.stepRejected + '</span></div>';
   } else {
     const idx = order.indexOf(data.statut);
     title.textContent = steps[idx] || steps[0];
     order.forEach((code, i) => {
       const div = document.createElement('div');
-      div.className = 'tstep' + (i < idx ? ' done' : '') + (i === idx ? ' now' : '');
+      const estDone = i < idx || (i === idx && order[idx] === 'CLOSED');
+      div.className = 'tstep' + (estDone ? ' done' : '') + (i === idx ? ' now' : '');
       div.innerHTML = '<div class="c"></div><span>' + steps[i] + '</span>';
       line.appendChild(div);
     });
   }
 
   const meta = document.getElementById('trackMeta');
-  const dEpot = data.depot ? new Date(data.depot).toLocaleDateString(lang === 'ar' ? 'ar-TN' : 'fr-TN') : '—';
-  const dMaj = data.maj ? new Date(data.maj).toLocaleDateString(lang === 'ar' ? 'ar-TN' : 'fr-TN') : '—';
-  meta.textContent = (lang === 'ar'
-    ? ('تاريخ الإيداع: ' + dEpot + ' · آخر تحديث: ' + dMaj)
-    : ('Dépôt : ' + dEpot + ' · Dernière mise à jour : ' + dMaj));
+  const fmt = d => d ? new Date(d).toLocaleDateString(lang === 'ar' ? 'ar-TN' : 'fr-TN') : '—';
+  const note = data.note ? '<br><em>' + escapeHtml(data.note) + '</em>' : '';
+  if (lang === 'ar') {
+    meta.innerHTML = 'تاريخ الإيداع: ' + fmt(data.depot) + ' · آخر تحديث: ' + fmt(data.maj) + note;
+  } else {
+    meta.innerHTML = 'Dépôt : ' + fmt(data.depot) + ' · Mise à jour : ' + fmt(data.maj) + note;
+  }
 }
 
 /* ------------------------- Installation PWA ------------------------- */
